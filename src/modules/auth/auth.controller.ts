@@ -6,8 +6,25 @@ const createUser = async (req: Request, res: Response) => {
         const result = await authService.createUser(req.body);
         res.status(201).json({
             success: true,
-            message: "User created successfully",
+            message: "User registered successfully",
             data: result.rows[0],
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+            errors: error,
+        });
+    }
+};
+
+const loginUser = async (req: Request, res: Response) => {
+    try {
+        const result = await authService.loginUser(req.body);
+        res.status(201).json({
+            success: true,
+            message: "Login successful",
+            data: result,
         });
     } catch (error: any) {
         res.status(500).json({
@@ -20,4 +37,5 @@ const createUser = async (req: Request, res: Response) => {
 
 export const authController = {
     createUser,
+    loginUser,
 };
