@@ -26,7 +26,14 @@ const updateUserById = async (req: Request, res: Response) => {
             userId as string,
             payload
         );
-		
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+
         res.status(200).json({
             success: true,
             message: "User updated successfully",
@@ -41,7 +48,32 @@ const updateUserById = async (req: Request, res: Response) => {
     }
 };
 
+const deleteUserById = async (req: Request, res: Response) => {
+    try {
+        const result = await userService.deleteUserById(
+            req.params.userId as string
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+        res.status(200).json({
+            success: true,
+            message: "User deleted successfully",
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+            errors: error,
+        });
+    }
+};
+
 export const userController = {
     getAllUsers,
     updateUserById,
+    deleteUserById,
 };

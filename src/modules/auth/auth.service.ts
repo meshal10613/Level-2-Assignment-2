@@ -26,12 +26,8 @@ const loginUser = async (payload: Record<string, unknown>) => {
         password as string,
         user.password
     );
-    const isEmailMatch = user.email === email;
     if (!isPasswordMatch) {
-        return { message: "Password does not match!" };
-    };
-    if (!isEmailMatch) {
-        return { message: "Email does not match!" };
+        return "password";
     };
 
 	delete user.password;
