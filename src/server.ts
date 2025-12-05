@@ -3,6 +3,7 @@ import config from "./config";
 import initDB from "./config/db";
 import { authRoutes } from "./modules/auth/auth.routes";
 import { userRoutes } from "./modules/user/user.routes";
+import { vehiclesRoutes } from "./modules/vehicles/vehiclesRoutes";
 
 
 const app = express();
@@ -22,6 +23,7 @@ initDB();
 //* Routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/vehicles", vehiclesRoutes);
 
 app.listen(port, () => {
 	console.log(`Server is running on http://localhost:${port}`);
