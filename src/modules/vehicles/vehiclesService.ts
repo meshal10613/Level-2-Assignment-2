@@ -67,9 +67,18 @@ const getAllVehicles = async() => {
 		`SELECT * FROM vehicles`
 	);
 	return result
-}
+};
+
+const getVehiclesById = async(id: string) => {
+	const result = await pool.query(
+		`SELECT * FROM vehicles WHERE id = $1`,
+		[id]
+	);
+	return result;
+};
 
 export const vehiclesService = {
     createVehicles,
-	getAllVehicles
+	getAllVehicles,
+	getVehiclesById
 };
