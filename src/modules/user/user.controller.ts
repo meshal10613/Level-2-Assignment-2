@@ -22,15 +22,15 @@ const updateUserById = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
         const payload = req.body;
-        if(req?.user?.id !== parseInt(userId as string)) {
+        if (req?.user?.id !== parseInt(userId as string)) {
             return res.status(401).json({
                 success: false,
                 message: "Unauthorized Access",
             });
-        };
+        }
         const result = await userService.updateUserById(
             userId as string,
-            payload,
+            payload
         );
 
         if (result.rows.length === 0) {
@@ -59,7 +59,13 @@ const deleteUserById = async (req: Request, res: Response) => {
         const result = await userService.deleteUserById(
             req.params.userId as string
         );
-        if (result.rows.length === 0) {
+        if (typeof result === "string") {
+            return res.status(404).json({
+                success: false,
+                message: result,
+            });
+        }
+        if (result.length === 0) {
             return res.status(404).json({
                 success: false,
                 message: "User not found",
