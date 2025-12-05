@@ -24,6 +24,31 @@ const createVehicles = async(req: Request, res: Response) => {
 	}
 };
 
+const getAllVehicles = async(req: Request, res: Response) => {
+	try {
+		const result = await vehiclesService.getAllVehicles();
+		if(result.rows.length === 0) {
+			return res.status(200).json({
+				success: false,
+				message: "No vehicles found",
+				data: result.rows
+			})
+		}
+		res.status(200).json({
+			success: true,
+			message: "Vehicles retrieved successfully",
+			data: result.rows,
+		})
+	} catch (error: any) {
+		res.status(500).json({
+			success: false,
+			message: error.message,
+			errors: error,
+		})
+	}
+};
+
 export const vehiclesController = {
 	createVehicles,
+	getAllVehicles
 };
