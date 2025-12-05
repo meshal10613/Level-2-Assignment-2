@@ -54,6 +54,23 @@ const createBookings = async(payload: Record<string, unknown>) => {
 	return result;
 };
 
+const getAllBookings = async() => {
+	const result = await pool.query(`SELECT * FROM bookings`);
+	const newData = result.rows;
+
+	for (let i = 0; i < newData.length; i++) {
+		const booking = newData[i];
+		const customer_id = booking.customer_id;
+		const vehicle_id = booking.vehicle_id;
+		const getCustomer = await pool.query(`SELECT * FROM users WHERE id = ${customer_id}`);
+		const getVehicle = await pool.query(`SELECT * FROM vehicles WHERE id = ${vehicle_id}`);
+		booking.customer = getCustomer.rows.length > 0 ? getCustomer.rows[0] : null;
+		booking.vehicle = getVehicle.rows.length > 0 ? getVehicle.rows[0] : null;
+	};
+	return result;
+};
+
 export const bookingService = {
 	createBookings,
+	getAllBookings
 };
