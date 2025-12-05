@@ -62,32 +62,56 @@ const createVehicles = async (payload: Record<string, unknown>) => {
     return result;
 };
 
-const getAllVehicles = async() => {
-	const result = await pool.query(
-		`SELECT * FROM vehicles`
-	);
-	return result
+const getAllVehicles = async () => {
+    const result = await pool.query(`SELECT * FROM vehicles`);
+    return result;
 };
 
-const getVehiclesById = async(id: string) => {
-	const result = await pool.query(
-		`SELECT * FROM vehicles WHERE id = $1`,
-		[id]
-	);
-	return result;
+const getVehiclesById = async (id: string) => {
+    const result = await pool.query(`SELECT * FROM vehicles WHERE id = $1`, [
+        id,
+    ]);
+    return result;
 };
 
-const deleteVehiclesById = async(id: string) => {
-	const result = await pool.query(
-		`DELETE FROM vehicles WHERE id = $1 RETURNING *`,
-		[id]
-	);
-	return result;
-}
+const updateVehiclesById = async (
+    id: string,
+    payload: Record<string, unknown>
+) => {
+    const keys = [];
+    const values = [];
+    let index = 1;
+
+    for (const [key, value] of Object.entries(payload)) {
+		keys.push(`${key} = $${index}`);
+		values.push(value);
+		index++;
+    }
+    if (keys.length === 0) {
+        return "No valid fields to update.";
+    }
+    values.push(id);
+
+    const query = `
+		UPDATE vehicles SET ${keys.join(", ")} WHERE id = $${index}
+		RETURNING id, vehicle_name, type, registration_number, daily_rent_price, availability_status
+	`;
+    const result = await pool.query(query, values);
+    return result.rows[0];
+};
+
+const deleteVehiclesById = async (id: string) => {
+    const result = await pool.query(
+        `DELETE FROM vehicles WHERE id = $1 RETURNING *`,
+        [id]
+    );
+    return result;
+};
 
 export const vehiclesService = {
     createVehicles,
-	getAllVehicles,
-	getVehiclesById,
-	deleteVehiclesById
+    getAllVehicles,
+    getVehiclesById,
+    updateVehiclesById,
+    deleteVehiclesById,
 };
