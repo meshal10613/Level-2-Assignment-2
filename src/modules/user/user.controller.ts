@@ -22,9 +22,15 @@ const updateUserById = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
         const payload = req.body;
+        if(req?.user?.id !== parseInt(userId as string)) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized Access",
+            });
+        };
         const result = await userService.updateUserById(
             userId as string,
-            payload
+            payload,
         );
 
         if (result.rows.length === 0) {

@@ -1,5 +1,7 @@
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import { pool } from "../../config/db";
+import config from "../../config";
 
 const createUser = async (payload: Record<string, unknown>) => {
     const { name, email, password, phone, role } = payload;
@@ -28,10 +30,15 @@ const loginUser = async (payload: Record<string, unknown>) => {
     );
     if (!isPasswordMatch) {
         return "password";
-    };
+    }
 
-	delete user.password;
-	return { token: "token", user };
+    delete user.password;
+    const token = jwt.sign(
+        { id: user.id, name: user.name, email: user.email, role: user.role },
+        config.jwt_secret as string,
+        { expiresIn: "1h" }
+    );
+    return { token, user };
 };
 
 export const authService = {

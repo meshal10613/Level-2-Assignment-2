@@ -70,7 +70,10 @@ const getAllBookings = async() => {
 	return result;
 };
 
+const updateBookingsById = async(id: string, payload: Record<string, unknown>) => {};
+
 export const bookingService = {
 	createBookings,
-	getAllBookings
+	getAllBookings,
+	updateBookingsById
 };

@@ -48,7 +48,21 @@ const getAllBookings = async (req: Request, res: Response) => {
     }
 };
 
+const updateBookingsById = async(req: Request, res: Response) => {
+	try {
+		const id = req.params.bookingId;
+		console.log(id)
+	} catch (error: any) {
+		res.status(500).json({
+			success: false,
+			message: error.message,
+			errors: error,
+		})
+	}
+};
+
 export const bookingController = {
     createBookings,
     getAllBookings,
+	updateBookingsById
 };
