@@ -70,10 +70,16 @@ const getAllBookings = async() => {
 	return result;
 };
 
+const getAllBookingsByUserId = async(id: string) => {
+	const result = await pool.query(`SELECT * FROM bookings WHERE customer_id = ${id}`);
+	return result;
+}
+
 const updateBookingsById = async(id: string, payload: Record<string, unknown>) => {};
 
 export const bookingService = {
 	createBookings,
 	getAllBookings,
+	getAllBookingsByUserId,
 	updateBookingsById
 };
