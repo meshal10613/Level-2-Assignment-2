@@ -4,6 +4,7 @@ import { authRoutes } from "./modules/auth/auth.routes";
 import { userRoutes } from "./modules/user/user.routes";
 import { vehiclesRoutes } from "./modules/vehicles/vehiclesRoutes";
 import { bookingsRoutes } from "./modules/bookings/bookings.routes";
+import autoMarkReturn from "./middleware/autoMarkReturn";
 
 
 const app = express();
@@ -18,6 +19,9 @@ app.get("/", (req: Request, res: Response) => {
 
 //* Initialize DB
 initDB();
+
+//* Auto Mark Return
+autoMarkReturn();
 
 //* Routes
 app.use("/api/v1/auth", authRoutes);

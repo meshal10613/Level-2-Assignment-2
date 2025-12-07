@@ -73,7 +73,22 @@ const getAllBookings = async (req: Request, res: Response) => {
 const updateBookingsById = async (req: Request, res: Response) => {
     try {
         const id = req.params.bookingId;
-        console.log(id);
+        const result = await bookingService.updateBookingsById(
+            id as string,
+            req.user
+        );
+        if (typeof result === "string") {
+            return res.status(404).json({
+                success: false,
+                message: result,
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: result?.message,
+            data: result?.data,
+        });
     } catch (error: any) {
         res.status(500).json({
             success: false,
