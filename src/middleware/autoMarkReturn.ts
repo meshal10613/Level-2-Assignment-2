@@ -12,8 +12,21 @@ const autoMarkReturn = () => {
 			RETURNING id;
 		`;
         const result = await pool.query(query);
-        if (result.rowCount as number > 0) {
+        if ((result.rowCount as number) > 0) {
             console.log(`Auto-returned ${result.rowCount} booking(s).`);
+            const vehicleIds = result.rows.map((b) => b.vehicle_id);
+
+            const vehicleQuery = `
+                    UPDATE vehicles
+                    SET availability_status = 'available'
+                    WHERE id = ANY($1::uuid[]);
+                `;
+
+            await pool.query(vehicleQuery, [vehicleIds]);
+
+            console.log(
+                `Updated ${vehicleIds.length} vehicle(s) to available.`
+            );
         }
     });
 };
