@@ -102,6 +102,7 @@ const updateVehiclesById = async (
 		RETURNING id, vehicle_name, type, registration_number, daily_rent_price, availability_status
 	`;
     const result = await pool.query(query, values);
+    if(result.rowCount === 0) return "Vehicles not found";
     return result.rows[0];
 };
 
