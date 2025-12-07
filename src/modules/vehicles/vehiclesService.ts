@@ -78,14 +78,19 @@ const updateVehiclesById = async (
     id: string,
     payload: Record<string, unknown>
 ) => {
+    const validStatuses = ["booked", "available"];
+
+    if (!validStatuses.includes(payload.availability_status as string)) {
+        return "Invalid availability_status. Allowed: " + validStatuses.join(", ");
+    }
     const keys = [];
     const values = [];
     let index = 1;
 
     for (const [key, value] of Object.entries(payload)) {
-		keys.push(`${key} = $${index}`);
-		values.push(value);
-		index++;
+        keys.push(`${key} = $${index}`);
+        values.push(value);
+        index++;
     }
     if (keys.length === 0) {
         return "No valid fields to update.";

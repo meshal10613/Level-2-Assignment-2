@@ -81,7 +81,13 @@ const updateVehiclesById = async (req: Request, res: Response) => {
         const id = req.params.vehicleId;
 		const payload = req.body;
         const result = await vehiclesService.updateVehiclesById(id as string, payload);
-        if (result?.length === 0 || typeof result === "string") {
+        if(typeof result === "string") {
+            return res.status(400).json({
+                success: false,
+                message: result,
+            });
+        }
+        if (result?.length === 0) {
             return res.status(404).json({
                 success: false,
                 message: "Vehicles not found",
