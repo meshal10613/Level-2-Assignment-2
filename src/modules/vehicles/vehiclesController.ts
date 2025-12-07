@@ -111,6 +111,12 @@ const deleteVehiclesById = async (req: Request, res: Response) => {
     try {
         const id = req.params.vehicleId;
         const result = await vehiclesService.deleteVehiclesById(id as string);
+        if(typeof result === "string") {
+            return res.status(404).json({
+                success: false,
+                message: result,
+            });
+        }
         if (result.rows.length === 0) {
             return res.status(200).json({
                 success: false,

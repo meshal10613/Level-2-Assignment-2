@@ -81,7 +81,9 @@ const updateVehiclesById = async (
     const validStatuses = ["booked", "available"];
 
     if (!validStatuses.includes(payload.availability_status as string)) {
-        return "Invalid availability_status. Allowed: " + validStatuses.join(", ");
+        return (
+            "Invalid availability_status. Allowed: " + validStatuses.join(", ")
+        );
     }
     const keys = [];
     const values = [];
@@ -102,11 +104,21 @@ const updateVehiclesById = async (
 		RETURNING id, vehicle_name, type, registration_number, daily_rent_price, availability_status
 	`;
     const result = await pool.query(query, values);
-    if(result.rowCount === 0) return "Vehicles not found";
+    if (result.rowCount === 0) return "Vehicles not found";
     return result.rows[0];
 };
 
 const deleteVehiclesById = async (id: string) => {
+    const getBookings = await pool.query(
+        `SELECT * FROM bookings WHERE vehicle_id = $1`,
+        [id]
+    );
+    const vehicleBookings = getBookings.rows;
+    for (let i = 0; i < vehicleBookings.length; i++) {
+        if (vehicleBookings[i].status === "active") {
+            return "Cannot delete user with active bookings";
+        }
+    }
     const result = await pool.query(
         `DELETE FROM vehicles WHERE id = $1 RETURNING *`,
         [id]

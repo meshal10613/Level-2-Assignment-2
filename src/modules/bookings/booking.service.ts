@@ -89,6 +89,10 @@ const getAllBookingsByUserId = async (id: string) => {
     const result = await pool.query(
         `SELECT * FROM bookings WHERE customer_id = ${id}`
     );
+    const vehicle = await pool.query(
+        `SELECT * FROM vehicles WHERE id = ${result.rows[0].vehicle_id}`
+    );
+    result.rows[0].vehicle = vehicle.rows[0];
     return result;
 };
 
