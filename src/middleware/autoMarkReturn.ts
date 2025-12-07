@@ -23,7 +23,7 @@ const autoMarkReturn = () => {
                 `;
             const updateResult = await pool.query(vehicleQuery, [vehicleIds]);
             console.log(
-                `Updated ${vehicleIds.length} vehicle(s) to available.`
+                `Updated ${updateResult.rowCount} vehicle(s) to available.`
             );
         }
     });
